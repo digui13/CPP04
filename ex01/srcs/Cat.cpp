@@ -12,17 +12,15 @@ Cat::Cat(const Cat &obj)
 {
 	cout 	<< "Copy Cat"
 			<< endl;
-
 	*this = obj;
 	_brain = new Brain(*obj._brain);
 }
 
-
 Cat::~Cat(void)
 {
+	delete _brain;
 	cout 	<< "Deconstructor Cat"
 			<< endl;
-	delete _brain;
 }
 
 Cat& Cat::operator=(const Cat &obj)

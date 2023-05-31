@@ -5,7 +5,7 @@
 #	MAKEFLAGS += --silent									# Silent the output makefile default msgs
 
 # Executable name
-EXEC_NAME					=	poly
+EXEC_NAME					=	animal
 
 # Compiler program
 COMP						=	clang++

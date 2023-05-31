@@ -6,6 +6,7 @@
 
 class Dog : public Animal
 {
+	
 	private:
 
 		Brain* _brain;
@@ -14,7 +15,7 @@ class Dog : public Animal
 
 		Dog(void);
 		Dog(const Dog &obj);
-		~Dog(void);
+		virtual ~Dog(void);
 		Dog& operator=(const Dog &obj);
 		void makeSound(void) const;
 };

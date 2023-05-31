@@ -18,9 +18,9 @@ Dog::Dog(const Dog &obj)
 
 Dog::~Dog(void)
 {
+	delete _brain;
 	cout 	<< "Deconstructor Dog"
 			<< endl;
-	delete _brain;
 }
 
 Dog& Dog::operator=(const Dog &obj)

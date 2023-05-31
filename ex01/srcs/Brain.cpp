@@ -10,7 +10,6 @@ Brain::Brain(const Brain &obj)
 {
 	cout 	<< "Copy Brain"
 			<< endl;
-
 	*this = obj;
 }
 

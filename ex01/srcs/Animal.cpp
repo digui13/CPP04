@@ -14,7 +14,6 @@ Animal::Animal(const Animal &obj)
 	*this = obj;
 }
 
-
 Animal::~Animal(void)
 {
 	cout 	<< "Deconstructor Animal"
