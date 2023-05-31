@@ -11,10 +11,8 @@ Cat::Cat(const Cat &obj)
 {
 	cout 	<< "Copy Cat"
 			<< endl;
-
 	*this = obj;
 }
-
 
 Cat::~Cat(void)
 {

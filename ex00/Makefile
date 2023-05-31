@@ -75,7 +75,9 @@ ALL_DIRS					=	$(OBJ_DIR) \
 SRC_FILES					=	main.cpp \
 								$(SRC_DIR)/Animal.cpp \
 								$(SRC_DIR)/Cat.cpp \
-								$(SRC_DIR)/Dog.cpp
+								$(SRC_DIR)/Dog.cpp \
+								$(SRC_DIR)/WrongAnimal.cpp \
+								$(SRC_DIR)/WrongCat.cpp
 
 # Header files
 #HDR_FILES					=	Fixed.hpp
