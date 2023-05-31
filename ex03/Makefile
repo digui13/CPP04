@@ -2,88 +2,128 @@
 # 										VARIABLES												#
 #################################################################################################
 
-#	MAKEFLAGS += --silent
+#	MAKEFLAGS += --silent									# Silent the output makefile default msgs
 
-#NAME
-NAME						=	material
+# Executable name
+EXEC_NAME					=	interface
 
-# Compiler
-Compile						=	clang++ -Wall -Wextra -Werror -fsanitize=address -std=c++98 -Wshadow -Wno-shadow
+# Compiler program
+COMP						=	clang++
+#COMP						=	c++
 
-# Flags for Compiler
-O_FLAG 						=	-o
-C_FLAG 						=	-c
+#############################
+#			FLAGS			#
+#############################
+# Warnings that are risky or suggest there may have been an error
+WAR_F						=	-Wall -Wextra -Werror -Wshadow -Wno-shadow
 
-# Command for Library
+# Detect memory access error such as use-after-free and memory leaks
+SAN_F						=	-fsanitize=address
+
+# Only compiles on std=c++98 format
+STD_F						=	-std=c++98
+
+# Add the directory incs to the list of directories to be searched for header files during preprocessing.
+INC_F						=	-I incs
+
+# Change the name of output file
+OUT_F						=	-o
+
+# Compile or assemble the source files, but do not link
+CPL_F						=	-c
+
+#############################
+#			LIBRARY			#
+#############################
+# The archive library is a collection of files, typically object files, replaces or adds file to archive. If archive does not exist, ar creates
 AR							=	ar rc
 
-INC							=	-I includes
+#############################
+#		FOLDER COMMANDS		#
+#############################
+# Force create directory
+CREATE_DIR					=	mkdir -p
 
-# Folder Management
-RM							=	rm -rf
-CREATE_FOLDER 				=	mkdir -p
+# Force delete directory
+RM_RF						=	rm -rf
 
-# Norminette
-NORM 						=	norminette
+#############################
+#			FOLDERS			#
+#############################
+
+# Source directory
+SRC_DIR						=	srcs
+
+# Object directory
+OBJ_DIR						=	objs
+
+# Include directory
+INC_DIR						=	incs
+
+# Library directory
+LIB_DIR						=	libs
+
+# All directories
+ALL_DIRS					=	$(OBJ_DIR) \
+								$(LIB_DIR)
+
+#############################
+#			FILES			#
+#############################
+
+# Source files
+SRC_FILES					=	main.cpp \
+								$(SRC_DIR)/AMateria.cpp \
+								$(SRC_DIR)/Character.cpp \
+								$(SRC_DIR)/Cure.cpp \
+								$(SRC_DIR)/Ice.cpp \
+								$(SRC_DIR)/MateriaSource.cpp 
+
+
+# Header files
+#HDR_FILES					=	Fixed.hpp
+
+# Lib files
+LIB_FILE					=	$(EXEC_NAME).a
+
+# Object files
+OBJ_FILES					=	$(SRC_FILES:%.cpp=$(OBJ_DIR)/%.o) $(SRC_FILES:srcs/%.cpp=$(OBJ_DIR)/srcs/%.o)
 
 #################################################################################################
-# 										FOLDERS													#
+# 										RULES/TARGETS											#
 #################################################################################################
-
-SRC_FOLDER					=	srcs
-OBJ_FOLDER					=	objs
-INC_FOLDER					=	incs
-LIB_FOLDER					=	libs
-
-
-#################################################################################################
-# 										FILES													#
-#################################################################################################
-
-SRC_FILES					=	$(wildcard *.cpp) $(wildcard srcs/*.cpp)
-
-OBJ_FILES					=	$(SRC_FILES:%.cpp=$(OBJ_FOLDER)/%.o) $(SRC_FILES:srcs/%.cpp=$(OBJ_FOLDER)/srcs/%.o)
-
-INC_FILES					=	$(wildcard incs/*.h) 
-
-LIB_FILE					=	$(NAME).a
-
-
-#################################################################################################
-# 										RULES													#
-#################################################################################################
-
-# Convert C Files to Object Files
-$(OBJ_FOLDER)/%.o:%.cpp	folders
-					${Compile} $(INC) $(O_FLAG) $@ $(C_FLAG) $<
 
 # all
-all:				$(NAME)					
+all: $(EXEC_NAME)
 
-folders:				
-					$(CREATE_FOLDER) $(OBJ_FOLDER)
-					$(CREATE_FOLDER) $(OBJ_FOLDER)/$(SRC_FOLDER)
-					$(CREATE_FOLDER) $(LIB_FOLDER)
+# Compile C Files to Object Files
+# $< = first dependece
+# $@ = value of rule/target
+$(OBJ_DIR)/%.o: %.cpp
+	${COMP} $(WAR_F) $(SAN_F) $(STD_F) $(INC_F) $(CPL_F) $< $(OUT_F) $@
 
 # Build Project
-$(NAME): 			${OBJ_FILES}
-					${AR} ${LIB_FOLDER}/${LIB_FILE} ${OBJ_FILES}
-					${Compile} ${LIB_FOLDER}/${LIB_FILE} $(O_FLAG) $(NAME)
-
-# Norminette
-norm:
-					$(NORM) $(HEADER_FILES) $(SRC_FILES)
+$(EXEC_NAME): $(ALL_DIRS) ${OBJ_FILES}
+	${AR} $(LIB_DIR)/${LIB_FILE} ${OBJ_FILES}
+	${COMP} $(WAR_F) $(SAN_F) $(STD_F) $(LIB_DIR)/${LIB_FILE} $(OUT_F) $(EXEC_NAME)
 
 # Clean Project
 clean:
-					${RM} ${OBJ_FOLDER}
-					${RM} $(NAME)
+					${RM_RF} ${OBJ_DIR}
+					${RM_RF} $(EXEC_NAME)
 
 fclean:				clean
-					${RM} $(LIB_FOLDER)
+					${RM_RF} $(LIB_DIR)
 
 # Clean and Build Project
 re:					fclean all
 
-# Phony (I dont remember what this do, i think is to reserve the name or something like that)
-.PHONY:				all norm clean fclean re
+# All directories
+# Rule/target doesnt exist? then execute (works like that for anyone)
+$(ALL_DIRS):
+	$(CREATE_DIR) $(OBJ_DIR)
+	$(CREATE_DIR) $(OBJ_DIR)/$(SRC_DIR)
+	$(CREATE_DIR) $(LIB_DIR)
+
+# Phony (reserve the "key" names to avoid conflits)
+.PHONY:				all clean fclean re
